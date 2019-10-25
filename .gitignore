@@ -1,0 +1,14 @@
+**/.vscode
+*.class
+*.bin
+*.log
+*.fls
+*.aux
+*.xdv
+*.fdb_latexmk
+*.synctex.gz
+**/.ccls-cache
+**/tags
+tags.*
+tags.*
+*.lock
