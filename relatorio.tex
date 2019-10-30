@@ -23,8 +23,48 @@
 \maketitle
 
 \begin{enumerate}
-    \item \textbf{Introdução}
-        O objetivo 
+    \item \textbf{Introdução:}
+        O objetivo
+
+    \item \textbf{O simulador:}
+
+    \item \textbf{Análises:}
+        \begin{enumerate}
+            \item \textbf{Teste 1}
+            \newline
+            Neste teste, usamos uma arquitetura superescalar com \textit{2-way Pipeline}, 
+            \textit{2-line buffer}, um trace com 21 instruções, com todas as instruções 
+            idênticas ('ADD R1,R2,R3'), ou seja, todas leem e escrevem no mesmo local, 
+            comparamos o impacto de utilizar 1 ALU vs 2 ALU\@.
+        
+            \begin{figure}[!ht]
+            \caption{Execução com 1 ALU}
+            \centering
+            \includegraphics[width=1\textwidth]{teste1-a}
+            \end{figure}
+
+            No teste acima, apesar de muitas instruções serem despachadas para o Instruction Queue,
+            poucas vão para o Reservation Station (Janela Distribuida), já que existe somente 1 ALU
+            e sua janela comporta somente 2 instruções e somente uma é executada em cada ciclo.
+            Após sair da ALU o resultado vai para o \textit{Reorder Buffer}, para que possa ser escrito no banco
+            de registradores. Como neste trace todas as instruções escrevem no mesmo local, existe um
+            ``acumulo'' de instruções no buffer com resultado pronto, porém aguardando uma instrução
+            anterior terminar a escrita.
+
+            \newpage
+            \begin{figure}[!ht]
+            \caption{Execução com 2 ALU}
+            \centering
+            \includegraphics[width=1\textwidth]{teste1-b}
+            \end{figure}
+
+            Na segunda parte do teste, foi adicionada uma segunda ALU, isso fez com que um maior
+            numero de instruções fossem despachadas para as \textit{Reservation Stations}, gerando
+            um menor acumulo de instruções no \textit{Instruction Queue}, o fato de ter 2 ALU's faz 
+            com que ocorra um paralelismo de instruções, duas em cada janela. 
+            Contudo esse paralelismo fez com que houvesse um maior acumulo de instruções 
+            no \textit{Reorder Buffer}.
+        \end{enumerate}
 \end{enumerate}
 
 \end{document}
