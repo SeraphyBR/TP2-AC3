@@ -35,12 +35,12 @@
             Neste teste, usamos uma arquitetura superescalar com \textit{2-way Pipeline},
             \textit{2-line buffer}, um trace com 21 instruções, com todas as instruções
             idênticas ('ADD R1,R2,R3'), ou seja, todas leem e escrevem no mesmo local,
-            comparamos o impacto de utilizar 1 ALU vs 2 ALU\@.
+            comparamos o impacto de utilizar 1 ALU vs 2 ALU.
 
             \begin{figure}[!ht]
-            \caption{Execução com 1 ALU}
             \centering
             \includegraphics[width=1\textwidth]{teste1-a}
+            \caption{Execução com 1 ALU. Total de Ciclos no teste: 26}
             \end{figure}
 
             No teste acima, apesar de muitas instruções serem despachadas para o Instruction Queue,
@@ -53,9 +53,9 @@
 
             \newpage
             \begin{figure}[!ht]
-            \caption{Execução com 2 ALU}
             \centering
             \includegraphics[width=1\textwidth]{teste1-b}
+            \caption{Execução com 2 ALU.\@ Total de Ciclos no teste: 25}
             \end{figure}
 
             Na segunda parte do teste, foi adicionada uma segunda ALU, isso fez com que um maior
@@ -68,6 +68,88 @@
             \item \textbf{Teste 2}
             \newline
             Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{2-line Buffer}
+            e um trace com 21 instruções, todas fazendo uso da ALU (`ADD RX,R2,R3'), porém diferentemente
+            do teste 1, todas as instruções escrevem em local diferente. Comparamos o impacto ao
+            utilizar 1 ALU e 2 ALU.
+
+            %\begin{figure}[!ht]
+            %\centering
+            %\includegraphics[width=1\textwidth]{teste2-a}
+            %\caption{Execução com 1 ALU. Total de Ciclos no teste: 25}
+            %\end{figure}
+
+            No teste acima, vemos muitas instruções paradas no \textit{instruction queue} aguardando
+            serem despachadas, já que existe somente 1 ALU e sua janela há espaço para duas instruções.
+            Já no \textit{instruction queue} vemos somente 3 instruções, uma que está escrevendo no banco
+            e outras duas que estão aguardando o resultado da ALU.
+
+            %\begin{figure}[!ht]
+            %\centering
+            %\includegraphics[width=1\textwidth]{teste2-a}
+            %\caption{Execução com 2 ALU. Total de ciclos no teste: 15}
+            %\end{figure}
+
+            Nessa parte do teste, foi adicionada outra ALU, que impactou de forma bem significativa
+            o desempenho do trace. Na imagem acima podemos ver somente duas instruções aguardando no
+            \textit{Instruction Queue}, e 4 instruções na etapa de execução, duas em cada ALU.
+            Já no \textit{Reorder Buffer} vemos um número maior de instruções em comparação ao teste
+            anterior, devido ao maior número de instruções sendo executadas simultaneamente, além
+            disso é possível ver que duas instruções escrevem no banco de registradores ao mesmo tempo.
+
+            \item \textbf{Teste 3}
+            \newline
+            Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{2-line Buffer} e
+            um trace com 21 instruções, todas fazendo uso da ALU (instruções do tipo ADD), todas as
+            instruções apresentam dependências com a instrução anterior.
+            Comparamos o impacto de utilizar 1 ALU e 2 ALU.
+
+            %\begin{figure}[!ht]
+            %\centering
+            %\includegraphics[width=1\textwidth]{teste3-a}
+            %\caption{Execução com 1 ALU. Total de ciclos no teste: 45}
+            %\end{figure}
+
+
+            % rever esse liberação int
+            No teste acima, vemos um grande número de instruções paradas no \textit{Instruction Queue}
+            aguardando a liberação int para uma ALU, na ALU vemos as duas instruções paradas aguardando
+            suas dependências terminarem de escrever no banco de registradores, já no \textit{Reorder Buffer}
+            vemos as duas instruções que estão na ALU e uma terceira realizando a escrita.
+
+            Nesta parte do teste adicionamos uma segunda ALU, que não trouxe nenhum impacto devido as
+            dependências, podemos ver um grande número de instruções no \textit{Instruction Queue}, nas
+            ALU's podemos ver 3 instruções paradas aguardando suas dependências e somente uma instrução
+            sendo executada, já no \textit{Reorder Buffer} vemos 4 instruções aguardando seus resultados
+            para escreverem no banco.
+
+            \item \textbf{Teste 4}
+            \newline
+            Neste teste, utilizamos \textit{2-way Pipeline}, \textit{2-line Buffer} e um trace com 21
+            instruções todas sendo um ADD de ponto flutuante, e escrevendo em mesmo local, sem dependências.
+            Comparamos o impacto ao utilizar 1 FP e 2 FP.
+
+            %\begin{figure}[!ht]
+            %\centering
+            %\includegraphics[width=1\textwidth]{teste4-a}
+            %\caption{Execução com 1 FP. Total de ciclos no teste: 47}
+            %\end{figure}
+
+            No teste acima, vemos um grande número de instruções paradas no \textit{Instruction Queue}
+            aguardando a finalização de alguma instrução na FP1, já na FP2 podemos ver duas instruções sendo
+            executadas, no \textit{Reorder Buffer} vemos somente duas instruções aguardando a finalização para
+            realizar a escrita.
+
+            %\begin{figure}[!ht]
+            %\centering
+            %\includegraphics[width=1\textwidth]{teste4-b}
+            %\caption{Execução com 2 FP. Total de ciclos no teste: 27}
+            %\end{figure}
+
+            Na imagem acima vemos os teste com duas unidades FP que trouxe um grande impacto para a execução
+            do trace, podemos ver um número parecido de instrução na \textit{Instruction Queue}, porém nas
+            unidades de FP vemos duas instruções sendo executadas em cada uma das FP's.
+            No \textit{Reorder Buffer} vemos duas instruções a mais do que no teste com uma FP, e apenas uma
+            instrução escrevendo no banco de registradores.
 
         \end{enumerate}
     \item \textbf{Análise do simulador}
