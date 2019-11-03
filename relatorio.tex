@@ -1,160 +1,136 @@
 %!TEX TS-program = xelatex
 %!TEX encoding = UTF-8 Unicode
-%
-\documentclass[a4paper,11pt]{article}
-\usepackage{graphicx,url}
-\usepackage[T1]{fontenc}
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
 \usepackage[brazil]{babel}
-\usepackage{a4wide}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{fontspec}
+\usepackage{textcomp}
+\usepackage{xcolor}
 \setmainfont{Times New Roman}
 \graphicspath{{./imagens/}}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Relatório do Trabalho Prático II},
+    bookmarks=true,
+}
+\urlstyle{same}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
 
-\title{\vspace{-4cm}Relatório do Trabalho Prático 2\\Arquitetura de Computadores}
-\author{
-    Gabriel Lopes Ferreira\\
-    Luiz Junio Veloso Dos Santos\\
-    Matheus Luiz Oliveira Spindula\\
-    Rebeca Neto\\
+\title{
+    Relatório do Trabalho Prático II\\
+    {\footnotesize Arquitetura de Computadores III}
 }
 
-\begin{document}
+\author{
+    \IEEEauthorblockN{Gabriel Lopes Ferreira}
+    \IEEEauthorblockA{
+        \textit{PUC Minas - ICEI} \\
+        Belo Horizonte, Brazil \\
+        fulano@sga.pucminas.br
+    }
+    \and
+    \IEEEauthorblockN{Luiz Junio Veloso Dos Santos}
+    \IEEEauthorblockA{
+        \textit{PUC Minas - ICEI} \\
+        Belo Horizonte, Brazil\\
+        ljvsantos@sga.pucminas.br
+    }
+    \and
+    \IEEEauthorblockN{Matheus Luiz Oliveira Spindula}
+    \IEEEauthorblockA{
+        \textit{PUC Minas - ICEI} \\
+        Belo Horizonte, Brazil\\
+        fulano@sga.pucminas.br
+    }
+    \and
+    \IEEEauthorblockN{Rebeca Neto}
+    \IEEEauthorblockA{
+        \textit{PUC Minas - ICEI} \\
+        Belo Horizonte, Brazil\\
+        fulana@sga.pucminas.br
+    }
+}
 
 \maketitle
 
-\begin{enumerate}
-    \item \textbf{Introdução:}
-        O objetivo
+\begin{abstract}
+    Este é um relatório dos resultados obtidos ao realizar testes
+    em um Simulador de Pipeline Superescalar com objetivo de estudo
+    do funcionamento desse tipo de Pipeline.
+\end{abstract}
 
-    \item \textbf{O simulador:}
+\begin{IEEEkeywords}
+    Pipeline, Superescalar, Tomasulo, Simulador
+\end{IEEEkeywords}
 
-    \item \textbf{Análises:}
-        \begin{enumerate}
-            \item \textbf{Teste 1}
-            \newline
-            Neste teste, usamos uma arquitetura superescalar com \textit{2-way Pipeline},
-            \textit{2-line buffer}, um trace com 21 instruções, com todas as instruções
-            idênticas ('ADD R1,R2,R3'), ou seja, todas leem e escrevem no mesmo local,
-            comparamos o impacto de utilizar 1 ALU vs 2 ALU.
+\section{Introdução}
+    This document is a model and instructions for \LaTeX.
+    Please observe the conference page limits.
 
-            \begin{figure}[!ht]
-            \centering
-            \includegraphics[width=1\textwidth]{teste1-a}
-            \caption{Execução com 1 ALU. Total de Ciclos no teste: 26}
-            \end{figure}
+\section{O simulador}
+    O objetivo do simulador é auxiliar estudantes a entender o conceito de superescalaridade
+    na arquitetura de microprocessadores. O simulador é baseado no Algoritmo de Tomasulo,
+    na versão alfa o autor busca com o auxilio de avaliações e contribuições, aprimorar seu projeto.
+    O simulador nos permite testar diferentes tipos de arquitetura, como aumentar o número de instruções
+    no pipeline, alterar o número de unidades operacionais e o número de instruções na janela.
+    Além disso podemos ver o caminho percorrido pela instrução no pipeline superescalar de uma maneira
+    gráfica e também é possível ver o impacto de um programa com dependências e conflitos de
+    registradores.
 
-            No teste acima, apesar de muitas instruções serem despachadas para o Instruction Queue,
-            poucas vão para o \textit{Reservation Station} (Janela Distribuida), já que existe somente 1 ALU
-            e sua janela comporta somente 2 instruções e somente uma é executada em cada ciclo.
-            Após sair da ALU o resultado vai para o \textit{Reorder Buffer}, para que possa ser escrito no banco
-            de registradores. Como neste trace todas as instruções escrevem no mesmo local, existe um
-            ``acumulo'' de instruções no \textit{buffer} com resultado pronto, porém aguardando uma instrução
-            anterior terminar a escrita.
+\section{Metodologia adotada}
+    Para analisarmos a execução, realizamos diversos testes com trace padrões da ferramenta
+    e trace manipulados. Também fizemos alterações na arquitetura para analisarmos o impacto
+    de diferentes arquiteturas na execução de um programa, e de diferentes programas para
+    visualizarmos melhor problemas como dependências de leitura pós-escrita.
 
-            \newpage
-            \begin{figure}[!ht]
-            \centering
-            \includegraphics[width=1\textwidth]{teste1-b}
-            \caption{Execução com 2 ALU.\@ Total de Ciclos no teste: 25}
-            \end{figure}
+\section{Análise dos testes}
 
-            Na segunda parte do teste, foi adicionada uma segunda ALU, isso fez com que um maior
-            número de instruções fossem despachadas para as \textit{Reservation Stations}, gerando
-            um menor acumulo de instruções no \textit{Instruction Queue}, o fato de ter 2 ALU's faz
-            com que ocorra um paralelismo de instruções, duas em cada janela.
-            Contudo esse paralelismo fez com que houvesse um maior acumulo de instruções
-            no \textit{Reorder Buffer}.
+\section{Análise do simulador}
+    \subsection{Pontos Positivos}
+        \begin{itemize}
+            \item Auxilia muito na visualização de conceitos do\\
+                ``superescalar'', e aprendizagem de estudantes de\\
+                arquitetura de computadores.
+        \end{itemize}
+    \subsection{Pontos Negativos}
+        \begin{itemize}
+            \item A fonte usada no simulador é um pouco pequena, os elementos dele é pequeno.
+            \item Falta de um possibilidade dar zoom.
+            \item Não mostra um contador de ciclos.
+            \item Sempre que finalizar um teste é necessário reiniciar o programa para fazer
+                outro teste e novamente colocar toda a arquitetura que sera usada.
+        \end{itemize}
+    \subsection{Melhorias futuras}
+        \begin{itemize}
+            \item Implementar uma funcionalidade de zoom no simulador e aumentar a fonte
+                em todo o simulador.
+            \item Para melhorar o simulador seria aconselhável que uma variável que conta
+                o número de ciclos seja inserida, notamos que ja existe um contador interno,
+                mas que o valor dele não esta sendo mostrado para o usuário,
+                modificamos o código fonte do simulador para que essa variável fosse exibida
+                na tela.
+                Contudo foi possível perceber que ele não possui muitos tratamentos, onde se
+                o programa parar, ele continuara contando a cada click no botão ``next'',
+                independentemente do que esta sendo executado.
 
-            \item \textbf{Teste 2}
-            \newline
-            Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{2-line Buffer}
-            e um trace com 21 instruções, todas fazendo uso da ALU (`ADD RX,R2,R3'), porém diferentemente
-            do teste 1, todas as instruções escrevem em local diferente. Comparamos o impacto ao
-            utilizar 1 ALU e 2 ALU.
+        \end{itemize}
 
-            %\begin{figure}[!ht]
-            %\centering
-            %\includegraphics[width=1\textwidth]{teste2-a}
-            %\caption{Execução com 1 ALU. Total de Ciclos no teste: 25}
-            %\end{figure}
+\section{Conclusão}
 
-            No teste acima, vemos muitas instruções paradas no \textit{instruction queue} aguardando
-            serem despachadas, já que existe somente 1 ALU e sua janela há espaço para duas instruções.
-            Já no \textit{instruction queue} vemos somente 3 instruções, uma que está escrevendo no banco
-            e outras duas que estão aguardando o resultado da ALU.
-
-            %\begin{figure}[!ht]
-            %\centering
-            %\includegraphics[width=1\textwidth]{teste2-a}
-            %\caption{Execução com 2 ALU. Total de ciclos no teste: 15}
-            %\end{figure}
-
-            Nessa parte do teste, foi adicionada outra ALU, que impactou de forma bem significativa
-            o desempenho do trace. Na imagem acima podemos ver somente duas instruções aguardando no
-            \textit{Instruction Queue}, e 4 instruções na etapa de execução, duas em cada ALU.
-            Já no \textit{Reorder Buffer} vemos um número maior de instruções em comparação ao teste
-            anterior, devido ao maior número de instruções sendo executadas simultaneamente, além
-            disso é possível ver que duas instruções escrevem no banco de registradores ao mesmo tempo.
-
-            \item \textbf{Teste 3}
-            \newline
-            Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{2-line Buffer} e
-            um trace com 21 instruções, todas fazendo uso da ALU (instruções do tipo ADD), todas as
-            instruções apresentam dependências com a instrução anterior.
-            Comparamos o impacto de utilizar 1 ALU e 2 ALU.
-
-            %\begin{figure}[!ht]
-            %\centering
-            %\includegraphics[width=1\textwidth]{teste3-a}
-            %\caption{Execução com 1 ALU. Total de ciclos no teste: 45}
-            %\end{figure}
-
-
-            % rever esse liberação int
-            No teste acima, vemos um grande número de instruções paradas no \textit{Instruction Queue}
-            aguardando a liberação int para uma ALU, na ALU vemos as duas instruções paradas aguardando
-            suas dependências terminarem de escrever no banco de registradores, já no \textit{Reorder Buffer}
-            vemos as duas instruções que estão na ALU e uma terceira realizando a escrita.
-
-            Nesta parte do teste adicionamos uma segunda ALU, que não trouxe nenhum impacto devido as
-            dependências, podemos ver um grande número de instruções no \textit{Instruction Queue}, nas
-            ALU's podemos ver 3 instruções paradas aguardando suas dependências e somente uma instrução
-            sendo executada, já no \textit{Reorder Buffer} vemos 4 instruções aguardando seus resultados
-            para escreverem no banco.
-
-            \item \textbf{Teste 4}
-            \newline
-            Neste teste, utilizamos \textit{2-way Pipeline}, \textit{2-line Buffer} e um trace com 21
-            instruções todas sendo um ADD de ponto flutuante, e escrevendo em mesmo local, sem dependências.
-            Comparamos o impacto ao utilizar 1 FP e 2 FP.
-
-            %\begin{figure}[!ht]
-            %\centering
-            %\includegraphics[width=1\textwidth]{teste4-a}
-            %\caption{Execução com 1 FP. Total de ciclos no teste: 47}
-            %\end{figure}
-
-            No teste acima, vemos um grande número de instruções paradas no \textit{Instruction Queue}
-            aguardando a finalização de alguma instrução na FP1, já na FP2 podemos ver duas instruções sendo
-            executadas, no \textit{Reorder Buffer} vemos somente duas instruções aguardando a finalização para
-            realizar a escrita.
-
-            %\begin{figure}[!ht]
-            %\centering
-            %\includegraphics[width=1\textwidth]{teste4-b}
-            %\caption{Execução com 2 FP. Total de ciclos no teste: 27}
-            %\end{figure}
-
-            Na imagem acima vemos os teste com duas unidades FP que trouxe um grande impacto para a execução
-            do trace, podemos ver um número parecido de instrução na \textit{Instruction Queue}, porém nas
-            unidades de FP vemos duas instruções sendo executadas em cada uma das FP's.
-            No \textit{Reorder Buffer} vemos duas instruções a mais do que no teste com uma FP, e apenas uma
-            instrução escrevendo no banco de registradores.
-
-        \end{enumerate}
-    \item \textbf{Análise do simulador}
-    \item \textbf{Conclusões finais}
-
-\end{enumerate}
+\begin{thebibliography}{00}
+    \bibitem{b1} Roberto Miranda, and Eduardo Gregório,
+    Superescalar Simulator (ALPHA version) based on Tomasulo's Algorithm,
+    \url{https://github.com/robertomap/SuperscalarSIM}
+\end{thebibliography}
 
 \end{document}
