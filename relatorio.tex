@@ -36,7 +36,7 @@
     \IEEEauthorblockA{
         \textit{PUC Minas - ICEI} \\
         Belo Horizonte, Brazil \\
-        fulano@sga.pucminas.br
+        gabriel.ferreira.1116674@sga.pucminas.br
     }
     \and
     \IEEEauthorblockN{Luiz Junio Veloso Dos Santos}
@@ -50,7 +50,7 @@
     \IEEEauthorblockA{
         \textit{PUC Minas - ICEI} \\
         Belo Horizonte, Brazil\\
-        fulano@sga.pucminas.br
+        matheus.spindula@sga.pucminas.br
     }
     \and
     \IEEEauthorblockN{Rebeca Neto}
@@ -95,67 +95,87 @@
 
 \section{Análise dos testes}
     \subsection{Teste 01}
-    Neste teste, usamos uma arquitetura superescalar com \textit{2-way Pipeline}, \textit{2-line buffer}, 
+    Neste teste, usamos uma arquitetura superescalar com \textit{2-way Pipeline}, \textit{2-line buffer},
     um trace com 21 instruções com todas instruções idênticas (ADD R1,R2,R3), ou sejam todas leem e escrevem
     no mesmo local, comparamos o impacto de utilizar 1 ALU e 2 ALU.
+    \newpage
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste1-a}
+        \caption{Execução com 1 ALU e total de ciclos: 25}
+    \end{figure}
 
-    %"Print Execução 1 ALU"
-    %Total de Ciclos no teste: 25
-
-    No teste acima, apesar de muitas instruções serem despachadas para o \textit{Instruction Queue}, poucas 
+    No teste acima, apesar de muitas instruções serem despachadas para o \textit{Instruction Queue}, poucas
     vão para a \textit{Reservation Station} (Janela Distribuída), já que existe somente 1 ALU e sua janela
-    comporta somente 2 instruções e somente uma é executada em cada ciclo. Após sair da ALU o resultado vai 
+    comporta somente 2 instruções e somente uma é executada em cada ciclo. Após sair da ALU o resultado vai
     para o \textit{Reorder Buffer}, para que possa ser escrito no banco de registradores.
     No \textit{Reorder Buffer} podemos ver a primeira instrução com um ``Y'' na coluna \textit{ready}, e um
     ``Result'' na coluna V, indicando que seu resultado está pronto e que pode ser escrita no banco
 
-    %"Print Execução 2 ALU"
-    %Total de Ciclos no teste: 25
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste1-b}
+        \caption{Execução 2 ALU e total de ciclos: 25}
+    \end{figure}
+
 
     Na segunda parte do teste, foi adicionada uma segunda ALU, isso fez com que um maior número de instruções
     fossem despachadas para as \textit{Reservation Stations}, gerando um menor acumulo de instruções no
-    \textit{Instruction Queue}, o fato de ter 2 ALU faz com que ocorra um paralelismo de instruções, 2 
+    \textit{Instruction Queue}, o fato de ter 2 ALU faz com que ocorra um paralelismo de instruções, 2
     em cada Janela. No \textit{Reorder Buffer} podemos ver diversas instruções com ``Result'' na coluna V
     indicando que já estão com o resultado pronto, porém somente a primeira está com ``Y'' na coluna
     \textit{ready}.
 
     \subsection{Teste 02}
-    Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{3-line Buffer} e um trace 
-    com 21 instruções todas fazendo uso da ALU (ADD RX,R2,R3), porém diferentemente do teste 1, todas as 
+    Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{3-line Buffer} e um trace
+    com 21 instruções todas fazendo uso da ALU (ADD RX,R2,R3), porém diferentemente do teste 1, todas as
     instruções escrevem em local diferente. Comparamos o impacto ao utilizar 1 ALU e 2 ALU.
 
-    %"Print Execução 1 ALU"
-    %Total de Ciclos no teste: 25
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste2-a}
+        \caption{Execução 1 ALU e total de ciclos: 25}
+    \end{figure}
 
     No teste acima, vemos muitas instruções paradas no \textit{Instruction Queue} aguardando serem despachadas,
     já que existe somente 1 ALU e sua janela há espaço para duas instruções. Já no \textit{Instruction Queue}
     vemos somente 3 instruções, vemos um Result na primeira, e um Y no \textit{ready} indicando que está fazendo
     a escrita no banco de registradores.
 
-    %"Print Execução 2 ALU"
-    %Total de Ciclos no teste: 15
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste2-b}
+        \caption{Execução 2 ALU e total de ciclos: 15}
+    \end{figure}
 
     Nessa parte do teste, foi adicionada outra ALU, que impactou de forma bem significativa o desempenho
     do trace. Na print podemos ver somente duas instruções aguardando no \textit{Instruction Queue}, e 4 instruções
     na etapa de execução duas em cada ALU. Já no \textit{Reorder Buffer} vemos duas instruções com Result na
     coluna V, e estas mesmas duas instruções com Y na coluna \textit{ready}, além disso vemos outras 4 instruções
     no \textit{Reorder buffer}, aguardando seu resultado.
-    
+
     \subsection{Teste 03}
     Neste teste, usamos uma arquitetura com \textit{2-way Pipeline}, \textit{3-line Buffer} e um trace com 21
-    instruções todas fazendo uso da ALU (instruções do tipo ADD), todas instruções apresentam dependências com 
+    instruções todas fazendo uso da ALU (instruções do tipo ADD), todas instruções apresentam dependências com
     a instrução anterior. Comparamos o impacto ao utilizar 1 ALU e 2 ALU.
-    
-    %"Print Execução 1 ALU"
-    %Total de Ciclos no teste: 45
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste3-a}
+        \caption{Execução 1 ALU e total de ciclos: 45}
+    \end{figure}
 
     No teste acima, vemos um grande número de instruções paradas no \textit{Instruction Queue} aguardando a
     liberação para uma ALU. Na ALU podemos perceber na coluna Qk, que ambas as instruções aguardam dependências,
     visto que na primeira vemos um ROB 0, indicando que sua dependência, está no \textit{Reorder Buffer} linha 0,
     e na outra vemos um ROB 1. Já no \textit{Reorder Buffer} vemos uma instrução com Result e um Y.
-    
-    %"Print Execução 2 ALU"
-    %Total de Ciclos no teste: 45 
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste3-b}
+        \caption{Execução 2 ALU e total de ciclos: 45}
+    \end{figure}
+
 
     Nessa parte do teste adicionamos uma segunda ALU, que não trouxe nenhum impacto devido as dependências,
     podemos ver um grande número de instruções no \textit{Instruction Queue}, nas ALU's podemos ver 3 instruções
@@ -163,54 +183,68 @@
     vemos 4 instruções aguardando seus resultado para escreverem no banco.
 
     \subsection{Teste 04}
-    Neste teste, utilizamos \textit{2-way Pipeline}, \textit{3-line Buffer} e um trace com 21 instruções todas 
-    um ADD de ponto flutuante, e escrevendo em mesmo local, sem dependências, comparamos o impacto ao utilizar 
+    Neste teste, utilizamos \textit{2-way Pipeline}, \textit{3-line Buffer} e um trace com 21 instruções todas
+    um ADD de ponto flutuante, e escrevendo em mesmo local, sem dependências, comparamos o impacto ao utilizar
     1 FP e 2 FP.
-
-    %"Luiz nesse teste a gnt tirou umas 7 print coloca só a segunda 1 FP"
-    %Total de Ciclos no teste: 47
+    \newpage
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste4-a}
+        \caption{Execução 1 FP e total de ciclos: 47}
+    \end{figure}
 
     No teste acima, vemos um grande número de instruções parada no \textit{Instruction Queue} aguardando a
     finalização de alguma instrução na FP1, já na FP podemos ver duas instruções sendo executadas, já no
     \textit{Reorder Buffer} vemos somente duas instruções aguardando a finalização para realizar a escrita.
-    
-    %"Print Execução 2 FP"
-    %Total de Ciclos no teste: 27
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste4-b}
+        \caption{Execução 2 FP e total de ciclos: 27}
+    \end{figure}
 
     Na imagem acima vemos o teste com duas unidades FP que trouxe um grande impacto para a execução do trace.
-    Podemos perceber no banco de registradores (Register File), um registrador com o escrito "ROB 4", mostrando 
+    Podemos perceber no banco de registradores (Register File), um registrador com o escrito "ROB 4", mostrando
     que o seu valor está nessa posição do \textit{Reorder buffer}, isso ocorre devido a renomeação de
     registradores. Podemos ver um número parecido de instruções na \textit{Instruction Queue}, porém nas unidades
-    de FP vemos duas instruções sendo executadas em cada uma das FP's. No \textit{Reorder buffer} vemos 
+    de FP vemos duas instruções sendo executadas em cada uma das FP's. No \textit{Reorder buffer} vemos
     duas instruções a mais do que no teste com uma FP, e apenas uma instrução escrevendo no banco.
 
-    
+
     \subsection{Teste 05}
     Neste teste diferente dos anteriores, onde testamos vários tipos de problemas separadamente, utilizamos o
     trace padrão do simulador o ``mips\_assembly4.txt'' em que suas operações são mais aleatórias e misturam
     diversos tipo de operações. Usamos uma arquitetura com \textit{2-way Pipeline} e \textit{3-line buffer},
     realizamos testes com uma de cada unidade funcional e depois com duas de cada unidade.
+    
+    \newpage
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste5-a}
+        \caption{Execução 1 de cada unidade e total de ciclos: 42}
+    \end{figure}
 
-    %"Print teste 5 1 cada unidade"
-    %Total de Ciclos no teste: 42
-
-    Na imagem acima é possível ver diversas instruções na \textit{Instruction Queue} aguardando a liberação de 
+    Na imagem acima é possível ver diversas instruções na \textit{Instruction Queue} aguardando a liberação de
     uma unidade operacional. No register file, vemos duas instruções com ROB significando que seus valores estão
     no Reorder Buffer. Na etapa de execução podemos ver diversas instruções em estados diferentes, como algumas
-    aguardando dependências e outras sendo executadas ou aguardando na fila para executarem. 
+    aguardando dependências e outras sendo executadas ou aguardando na fila para executarem.
     No \textit{Reorder buffer} é possível notar duas instruções com ``Result'', fora de ordem, e as mesmas com Y,
     além disso é possível ver um Store com o valor de um registrador, indicando que ele está guardando aquele
     valor na memoria.
 
-    %"Print teste 5 2 cada unidade"
-    %Total de Ciclos no teste: 35
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.48\textwidth]{teste5-b}
+        \caption{Execução 2 de cada unidade e total de ciclos: 35}
+    \end{figure}
 
     Neste ultimo teste, repetimos o teste anterior porém com duas unidades funcionais de cada tipo, podemos ver
     somente duas instruções na \textit{Instruction Queue} aguardando o despacho, nas \textit{Reservation stations}
-    vemos um menor acumulo de operações devido a maior quantidade de unidades operacionais, já no 
+    vemos um menor acumulo de operações devido a maior quantidade de unidades operacionais, já no
     \textit{Reorder buffer} vemos um maior número de instruções aguardando para serem escritas no banco de
     registradores.
 
+\newpage
 \section{Análise do simulador}
     \subsection{Pontos Positivos}
         \begin{itemize}
@@ -245,7 +279,7 @@
 
 \begin{thebibliography}{00}
     \bibitem{b1} Roberto Miranda, and Eduardo Gregório,
-    Superescalar Simulator (ALPHA version) based on Tomasulo's Algorithm,
+    Superescalar Simulator\\(ALPHA version) based on Tomasulo's Algorithm,\\
     \url{https://github.com/robertomap/SuperscalarSIM}
 \end{thebibliography}
 
