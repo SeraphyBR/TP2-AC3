@@ -15,6 +15,7 @@
 \setmainfont{Times New Roman}
 \graphicspath{{./imagens/}}
 \hypersetup{
+    citecolor=blue,
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,
@@ -74,8 +75,11 @@
 \end{IEEEkeywords}
 
 \section{Introdução}
-    This document is a model and instructions for \LaTeX.
-    Please observe the conference page limits.
+    Este trabalho aborda o tema ``Superescalaridade'' da disciplina ``Arquitetura de Computadores III''.
+    Afim de aprofundar mais o tema estudado em sala, foi utilizado como ferramenta o programa
+    SuperscalarSIM\cite{b1}. Está presente no trabalho documentações detalhadas dos testes realizados
+    no simulador, com o propósito de explorar conceitos de superescalaridade e seus impactos no
+    desempenho da arquitetura.
 
 \section{O simulador}
     O objetivo do simulador é auxiliar estudantes a entender o conceito de superescalaridade
@@ -98,7 +102,6 @@
     Neste teste, usamos uma arquitetura superescalar com \textit{2-way Pipeline}, \textit{2-line buffer},
     um trace com 21 instruções com todas instruções idênticas (ADD R1,R2,R3), ou sejam todas leem e escrevem
     no mesmo local, comparamos o impacto de utilizar 1 ALU e 2 ALU.
-    \newpage
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.48\textwidth]{teste1-a}
@@ -216,7 +219,7 @@
     trace padrão do simulador o ``mips\_assembly4.txt'' em que suas operações são mais aleatórias e misturam
     diversos tipo de operações. Usamos uma arquitetura com \textit{2-way Pipeline} e \textit{3-line buffer},
     realizamos testes com uma de cada unidade funcional e depois com duas de cada unidade.
-    
+
     \newpage
     \begin{figure}[htbp]
         \centering
@@ -276,6 +279,16 @@
         \end{itemize}
 
 \section{Conclusão}
+    Após realizarmos diversos teste no SuperscalarSIM\cite{b1}, foi
+    possível compreender que a superescalaridade é um excelente
+    modelo de arquitetura, contudo se mostra complexo a forma como
+    é executado, devido as diversas etapas e estratégias utilizadas
+    para seu aperfeiçoamento. Em outras palavras sua arquitetura
+    torna-se mais cara. Na maioria das situações a arquitetura
+    se mostra viável, podendo ser notado uma grande melhora em relação
+    a outras arquiteturas, porém conforme o código a melhora desejada
+    poderá não ser alcançada devido a repetição dos registradores de escrita
+
 
 \begin{thebibliography}{00}
     \bibitem{b1} Roberto Miranda, and Eduardo Gregório,
